@@ -1,3 +1,6 @@
+#ifndef LAK_DEFER_HPP
+#define LAK_DEFER_HPP
+
 namespace lak
 {
     template <typename LAMBDA> struct defer_t
@@ -14,3 +17,4 @@ namespace lak
 #define LAK_DEFER_OBJECT LAK_DEFER_CONCAT(_DEFER_OBJECT_,__LINE__)
 #define DEFER(...) auto LAK_DEFER_LAMBDA = [&] __VA_ARGS__; lak::defer_t<decltype(LAK_DEFER_LAMBDA)> LAK_DEFER_OBJECT (LAK_DEFER_LAMBDA);
 
+#endif // LAK_DEFER_HPP
