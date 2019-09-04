@@ -3,18 +3,23 @@
 
 namespace lak
 {
-    template <typename LAMBDA> struct defer_t
+    template <typename LAMBDA>
+    struct defer_t
     {
-        LAMBDA &_lambda;
-        defer_t(LAMBDA &lambda) : _lambda(lambda) {}
+        LAMBDA _lambda;
+        defer_t(LAMBDA lambda) : _lambda(lambda) {}
         ~defer_t() { _lambda(); }
     };
+    template <typename LAMBDA>
+    inline defer_t<LAMBDA> defer(LAMBDA lambda)
+    {
+        return defer_t<LAMBDA>(lambda);
+    }
 }
 
 #define LAK_DEFER_CONCAT_EX(s1, s2) s1##s2
 #define LAK_DEFER_CONCAT(s1, s2) LAK_DEFER_CONCAT_EX(s1, s2)
-#define LAK_DEFER_LAMBDA LAK_DEFER_CONCAT(_DEFER_LAMBDA_,__LINE__)
 #define LAK_DEFER_OBJECT LAK_DEFER_CONCAT(_DEFER_OBJECT_,__LINE__)
-#define DEFER(...) auto LAK_DEFER_LAMBDA = [&] __VA_ARGS__; lak::defer_t<decltype(LAK_DEFER_LAMBDA)> LAK_DEFER_OBJECT (LAK_DEFER_LAMBDA);
+#define DEFER(...) auto LAK_DEFER_OBJECT = lak::defer([&](){ __VA_ARGS__; })
 
 #endif // LAK_DEFER_HPP
